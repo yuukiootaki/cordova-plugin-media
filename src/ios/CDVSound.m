@@ -272,6 +272,18 @@ BOOL keepAvAudioSessionAlwaysActive = NO;
             }
         }
 
+        // If the specified file exist, the audio buffer is prepared to be enable to get duration of the audio file.
+        BOOL bError = NO;
+        if (audioFile.player == nil) {
+            bError = [self prepareToPlay:audioFile withId:mediaId];
+        }
+
+        if (!bError) {
+            double duration = 0;
+            duration = round(audioFile.player.duration * 1000) / 1000;
+            [self onStatus:MEDIA_DURATION mediaId:mediaId param:@(duration)];
+        }
+
         self.currMediaId = mediaId;
 
         CDVPluginResult* result = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK];
